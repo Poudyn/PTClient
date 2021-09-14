@@ -65,3 +65,11 @@ else
  Console.WriteLine($"Message : {tdResult.Error.Message} Code : {tdResult.Error.Code}");
 }
 ```
+### About Me & This project
+This was my first project and I tried to write a useful and easy project.
+If you have an idea or opinion, be sure to let me know
+Also, this project is based on version 1.7 of Telegram.Td, and if you have a higher version of Telegram.Td, share it with me to update the project.
+An example project will be available soon
+
+Contact with me : [Telegram](https://t.me/ThePoudyn)
+News : [Telegram Channel](https://t.me/IPouDyn)
