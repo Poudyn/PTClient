@@ -1,6 +1,6 @@
 # PTClient
 
-Framework for easier use of Telegram.Td
+## Framework for easier use of Telegram.Td
  - Set Delegate for get updates
  - Filter updates
     - Filter by type
@@ -10,3 +10,8 @@ Framework for easier use of Telegram.Td
     - The return type is TdResult
  
     
+### Filter all updates
+```C#
+var filterAll = new Filter<Update>(x=>Console.WriteLine(x.GetType()));
+````
+
