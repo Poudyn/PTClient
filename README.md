@@ -35,3 +35,33 @@ var specialValue = new Filter<UpdateNewMessage, string>(x => Console.WriteLine(x
 var specialValue = new Filter<UpdateNewMessage, string>(x => Console.WriteLine(x), x=>x.Message.ChatId == 00000000 , "Message.Content.Text.Text")
 ```
 - When a message is received from a chat with the ChatId 00000000, the text of the message will be provided to you
+
+## Create Client
+```C#
+var filters = new List<IFilter>(//anyfilter):
+tdClient = new TdClient(filters);
+tdClient.Run();
+```
+### Send a request without having to receive a response
+```C#
+TdlibParameters parameters = new()
+{
+//// parameters
+};
+tdClient.Send(new SetTdlibParameters(parameters));
+```
+### Send request and receive result
+```C#
+TdResult<Ok> tdResult = await  tdClient.SetAuthenticationPhoneNumberAsync(new SetAuthenticationPhoneNumber
+{
+  PhoneNumber = "+1....."
+});
+if(tdResult.Successful)
+{
+  Console.WriteLine(tdResult.Result);
+}
+else
+{
+ Console.WriteLine($"Message : {tdResult.Error.Message} Code : {tdResult.Error.Code}");
+}
+```
