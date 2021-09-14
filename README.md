@@ -14,4 +14,13 @@
 ```C#
 var filterAll = new Filter<Update>(x=>Console.WriteLine(x.GetType()));
 ````
-
+### Filter special update by linq
+```C#
+var filterAll = new Filter<UpdateAuthorizationState>(OnAuthorizationStateWaitTdlibParameters,
+                                                     x => x.AuthorizationState.GetType() == typeof(AuthorizationStateWaitTdlibParameters));
+                                                     
+void OnAuthorizationStateWaitTdlibParameters(UpdateAuthorizationState state)
+{
+//do something
+}
+```
