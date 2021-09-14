@@ -9,16 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="RefToken">
-      <HintPath>..\..\RefToken\RefToken\bin\Debug\net5.0\RefToken.dll</HintPath>
-    </Reference>
-    <Reference Include="Telegram.Td">
-      <HintPath>bin\Debug\net5.0\ref\Telegram.Td.dll</HintPath>
-    </Reference>
+    <Folder Include="Functions\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Functions\" />
+    <Reference Include="RefToken">
+      <HintPath>Lib\RefToken.dll</HintPath>
+    </Reference>
+    <Reference Include="Telegram.Td">
+      <HintPath>Lib\Telegram.Td.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
