@@ -36,6 +36,12 @@ var specialValue = new Filter<UpdateNewMessage, string>(x => Console.WriteLine(x
 ```
 - When a message is received from a chat with the ChatId 00000000, the text of the message will be provided to you
 
+### Add a disposable filter
+```C#
+ tdClient.AddDisposableFilter(new Filter<UpdateFile>(x => Console.WriteLine("Downloaded"), x => x.File.Id == 0000 && x.File.Local.IsDownloadingCompleted));
+```
+- When the file with the ID 000 is downloaded, it tells you that the file was downloaded
+
 ## Create Client
 ```C#
 var filters = new List<IFilter>(//anyfilter):
