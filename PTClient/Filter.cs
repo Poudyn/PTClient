@@ -6,22 +6,43 @@ namespace PTClient
     public class Filter<TUpdate> : IFilter, ITransportUpdate
     {
         public delegate void UpdateHandler(TUpdate update);
-        private bool _onlyType;
-        private UpdateHandler _onUpdate;
         private readonly Predicate<TUpdate> _predicate;
+        private UpdateHandler _onUpdate;
+        private bool _onlyType;
+        private bool _isBase;
+        private bool _isUpdate;
         private bool _disposable;
         bool IFilter.Disposable { get => _disposable; set => _disposable = value; }
-        bool ITransportUpdate.OnlyTypeFiltering { get { return _onlyType; } }
+        bool ITransportUpdate.OnlyTypeFiltering => _onlyType;
+        bool ITransportUpdate.IsBase => _isBase;
+
+        bool ITransportUpdate.IsUpdate => _isUpdate;
 
         public Filter(UpdateHandler updateHandler, Predicate<TUpdate> predicate)
         {
             _onUpdate = updateHandler ?? throw new NullReferenceException("UpdateHandler cannot be null");
             _predicate = predicate ?? throw new NullReferenceException("Predicate cannot be null");
+            if(typeof(TUpdate) == typeof(Update))
+            {
+                _isUpdate = true;
+            }
+            else if(typeof(TUpdate) == typeof(BaseObject))
+            {
+                _isBase = true;
+            }
         }
         public Filter(UpdateHandler updateHandler)
         {
             _onUpdate = updateHandler ?? throw new NullReferenceException("UpdateHandler cannot be null");
             _onlyType = true;
+            if (typeof(TUpdate) == typeof(Update))
+            {
+                _isUpdate = true;
+            }
+            else if (typeof(TUpdate) == typeof(BaseObject))
+            {
+                _isBase = true;
+            }
         }
         bool IFilter.IsMatch(BaseObject update)
         {

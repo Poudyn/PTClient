@@ -11,19 +11,19 @@ namespace PTClient
         void ClientResultHandler.OnResult(BaseObject baseObject)
         {
             List<IFilter> filters = Filtering.GetFilters(baseObject);
-            if (!filters.IsTypeFilteringOnly())
+            if (filters.Any())
             {
-                filters.RemoveUpdateOnly();
-            }
-            foreach (var i in filters)
-            {
-                if (i is ITransportToken transportToken)
+                filters.RemoveUselessFilters();
+                foreach (var i in filters)
                 {
-                    transportToken.Transport();
-                }
-                else if (i is ITransportUpdate transportUpdate)
-                {
-                    transportUpdate.Transport(baseObject);
+                    if (i is ITransportToken transportToken)
+                    {
+                        transportToken.Transport();
+                    }
+                    else if (i is ITransportUpdate transportUpdate)
+                    {
+                        transportUpdate.Transport(baseObject);
+                    }
                 }
             }
         }

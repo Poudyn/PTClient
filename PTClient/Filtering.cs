@@ -11,14 +11,21 @@ namespace PTClient
         {
             return Filters.Where(x => x.IsMatch(baseObject)).ToList();
         }
-        internal static bool IsTypeFilteringOnly(this List<IFilter> filters)
+        internal static void RemoveUselessFilters(this List<IFilter> filters)
         {
-            List<ITransportUpdate> updateTransporters = filters.OfType<ITransportUpdate>().ToList();
-            return updateTransporters.Count == 1 && updateTransporters.First().OnlyTypeFiltering;
-        }
-        internal static void RemoveUpdateOnly(this List<IFilter> filters)
-        {
-            filters.Remove(filters.Find(x => x is ITransportUpdate transportUpdate && transportUpdate.OnlyTypeFiltering));
+            List<ITransportUpdate> transports = filters.OfType<ITransportUpdate>().ToList();
+            if (transports.Exists(x => !x.IsBase && !x.IsUpdate && !x.OnlyTypeFiltering))
+            {
+                filters.RemoveAll(x => x is ITransportUpdate transport && (transport.IsBase || transport.IsUpdate || transport.OnlyTypeFiltering));
+            }
+            else if(transports.Exists(x=>x.OnlyTypeFiltering && !x.IsBase && !x.IsUpdate))
+            {
+                filters.RemoveAll(x => x is ITransportUpdate transport && (transport.IsBase || transport.IsUpdate));
+            }
+            else if (transports.Exists(x => x.IsUpdate))
+            {
+                filters.RemoveAll(x => x is ITransportUpdate transport && transport.IsBase);
+            }
         }
     }
 }

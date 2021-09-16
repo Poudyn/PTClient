@@ -6,5 +6,7 @@ namespace PTClient
     {
         internal void Transport(BaseObject baseObject);
         internal bool OnlyTypeFiltering { get; }
+        internal bool IsBase { get; }
+        internal bool IsUpdate { get; }
     }
 }
