@@ -47,5 +47,18 @@ namespace PTClient
             filter.Disposable = true;
             Filtering.Filters.Add(filter);
         }
+        public void AddFilter(IFilter filter)
+        {
+            Filtering.Filters.Add(filter);
+        }
+        public void RemoveFilter(IFilter filter)
+        {
+            Filtering.Filters.Remove(filter);
+        }
+        public void ReloadFilters(List<IFilter> filters)
+        {
+            Filtering.Filters = filters;
+        }
+        public List<IFilter> Filters => Filtering.Filters;
     }
 }
