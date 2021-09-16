@@ -14,11 +14,7 @@ namespace PTClient
         internal static void RemoveUselessFilters(this List<IFilter> filters)
         {
             List<ITransportUpdate> transports = filters.OfType<ITransportUpdate>().ToList();
-            if (transports.Exists(x => !x.IsBase && !x.IsUpdate && !x.OnlyTypeFiltering))
-            {
-                filters.RemoveAll(x => x is ITransportUpdate transport && (transport.IsBase || transport.IsUpdate || transport.OnlyTypeFiltering));
-            }
-            else if(transports.Exists(x=>x.OnlyTypeFiltering && !x.IsBase && !x.IsUpdate))
+            if (transports.Exists(x => !x.IsBase && !x.IsUpdate))
             {
                 filters.RemoveAll(x => x is ITransportUpdate transport && (transport.IsBase || transport.IsUpdate));
             }

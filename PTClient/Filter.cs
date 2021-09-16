@@ -8,12 +8,10 @@ namespace PTClient
         public delegate void UpdateHandler(TUpdate update);
         private readonly Predicate<TUpdate> _predicate;
         private UpdateHandler _onUpdate;
-        private bool _onlyType;
         private bool _isBase;
         private bool _isUpdate;
         private bool _disposable;
         bool IFilter.Disposable { get => _disposable; set => _disposable = value; }
-        bool ITransportUpdate.OnlyTypeFiltering => _onlyType;
         bool ITransportUpdate.IsBase => _isBase;
 
         bool ITransportUpdate.IsUpdate => _isUpdate;
@@ -34,7 +32,6 @@ namespace PTClient
         public Filter(UpdateHandler updateHandler)
         {
             _onUpdate = updateHandler ?? throw new NullReferenceException("UpdateHandler cannot be null");
-            _onlyType = true;
             if (typeof(TUpdate) == typeof(Update))
             {
                 _isUpdate = true;
