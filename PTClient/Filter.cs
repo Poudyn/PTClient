@@ -6,49 +6,42 @@ namespace PTClient
     public class Filter<TUpdate> : IFilter, ITransportUpdate
     {
         public delegate void UpdateHandler(TUpdate update);
+
         private readonly Predicate<TUpdate> _predicate;
-        private UpdateHandler _onUpdate;
-        private bool _isBase;
-        private bool _isUpdate;
+        private readonly UpdateHandler _onUpdate;
+        private readonly bool _baseFilter;
+        private readonly bool _updateFilter;
+
         private bool _disposable;
         bool IFilter.Disposable { get => _disposable; set => _disposable = value; }
-        bool ITransportUpdate.IsBase => _isBase;
+        bool ITransportUpdate.IsBase => _baseFilter;
 
-        bool ITransportUpdate.IsUpdate => _isUpdate;
+        bool ITransportUpdate.IsUpdate => _updateFilter;
 
         public Filter(UpdateHandler updateHandler, Predicate<TUpdate> predicate)
         {
             _onUpdate = updateHandler ?? throw new NullReferenceException("UpdateHandler cannot be null");
             _predicate = predicate ?? throw new NullReferenceException("Predicate cannot be null");
-            if(typeof(TUpdate) == typeof(Update))
-            {
-                _isUpdate = true;
-            }
-            else if(typeof(TUpdate) == typeof(BaseObject))
-            {
-                _isBase = true;
-            }
+
+            if (typeof(TUpdate).IsUpdate())
+                _updateFilter = true;
+            else if (typeof(TUpdate).IsBaseObject())
+                _baseFilter = true;
         }
         public Filter(UpdateHandler updateHandler)
         {
             _onUpdate = updateHandler ?? throw new NullReferenceException("UpdateHandler cannot be null");
-            if (typeof(TUpdate) == typeof(Update))
-            {
-                _isUpdate = true;
-            }
-            else if (typeof(TUpdate) == typeof(BaseObject))
-            {
-                _isBase = true;
-            }
+
+            if (typeof(TUpdate).IsUpdate())
+                _updateFilter = true;
+            else if (typeof(TUpdate).IsBaseObject())
+                _baseFilter = true;
         }
         bool IFilter.IsMatch(BaseObject update)
         {
             if (typeof(TUpdate).IsInterface)
             {
-                if (!typeof(TUpdate).IsAssignableFrom(update.GetType()))
-                {
-                    return false;
-                }
+                return typeof(TUpdate).IsAssignableFrom(update.GetType());
             }
             else
             {
@@ -61,25 +54,23 @@ namespace PTClient
             {
                 return _predicate((TUpdate)update);
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
         void ITransportUpdate.Transport(BaseObject update)
         {
             _onUpdate?.Invoke((TUpdate)update);
+
             if (_disposable)
-            {
                 Filtering.Filters.Remove(this);
-            }
+
         }
 
     }
     public class Filter<TUpdate, TResult> : IFilter, ITransportToken
     {
         public delegate void UpdateHandler(TResult update);
-        private UpdateHandler _onUpdate;
+        private readonly UpdateHandler _onUpdate;
         private TResult _result;
         private bool _disposable;
         private readonly RefToken.RefToken _refToken;
@@ -117,17 +108,13 @@ namespace PTClient
                     {
                         return _refToken.Select(update, out _result);
                     }
-                    return false;
                 }
                 else
                 {
                     return _refToken.Select(update, out _result);
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
     }
